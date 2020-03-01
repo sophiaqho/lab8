@@ -197,23 +197,29 @@ module MakeSafeInterval (Endpoint : ORDERED_TYPE)
       | Empty
 
     let create (low : endpoint) (high : endpoint) : interval =
-      if high < low then Empty
+      if Endpoint.compare low high > 0 then Empty
       else Interval (low, high)
 
     let is_empty (intvl : interval) : bool =
-      intvl = Empty
+      match intvl with
+      | Empty -> true
+      | Interval _ -> false
 
     let contains (intvl : interval) (x : endpoint) : bool =
       match intvl with
       | Empty -> false
-      | Interval (low, high) -> x > low && x < high
+      | Interval (low, high) ->
+        Endpoint.compare x low >= 0
+        && Endpoint.compare x high <= 0
 
     let intersect (intvl1 : interval) (intvl2 : interval) : interval =
-      match intvl1, intvl2 with
-      | Empty, Empty -> Empty
-      | Empty, Interval (low, high) | Interval (low, high), Empty -> Empty
-      | Interval (low1, high1), Interval (low2, high2) ->
-        Interval (max low1 low2, min high1 high2)
+      let ordered x y = if Endpoint.compare x y <= 0 then x, y else y, x in
+        match intvl1, intvl2 with
+        | Empty, _
+        | _, Empty -> Empty
+        | Interval (low1, high1), Interval (low2, high2) ->
+          let (_, low), (high, _)  = ordered low1 low2, ordered high1 high2 in
+          create low high
     end ;;
 
 (* We have successfully made our returned module abstract, but believe
