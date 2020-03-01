@@ -191,6 +191,7 @@ MakeInterval above.) **Don't forget to specify the module type.**
 module MakeSafeInterval (Endpoint : ORDERED_TYPE)
                       : INTERVAL =
   struct
+    type endpoint = Endpoint.t
     type interval =
       | Interval of endpoint * endpoint
       | Empty
