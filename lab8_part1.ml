@@ -92,22 +92,15 @@ module MakeInterval (Endpoint : ORDERED_TYPE) =
       | Interval of Endpoint.t * Endpoint.t
       | Empty
 
-    (* create low high -- Returns a new interval covering `low` to
-       `high` inclusive. If `low` is greater than `high`, then the
-       interval is empty. *)
     let create (low : Endpoint.t) (high : Endpoint.t) : interval =
       if Endpoint.compare low high > 0 then Empty
       else Interval (low, high)
 
-    (* is_empty intvl -- Returns true if and only if `intvl` is
-       empty *)
     let is_empty (intvl : interval) : bool =
       match intvl with
       | Empty -> true
       | Interval _ -> false
 
-    (* contains intvl x -- Returns true if and only if the value `x`
-       is contained within `intvl` *)
     let contains (intvl : interval) (x : Endpoint.t) : bool =
       match intvl with
       | Empty -> false
@@ -115,9 +108,6 @@ module MakeInterval (Endpoint : ORDERED_TYPE) =
         Endpoint.compare x low >= 0
         && Endpoint.compare x high <= 0
 
-
-    (* intersect intvl1 intvl2 -- Returns the intersection of `intvl1`
-       and `intvl2` *)
     let intersect (intvl1 : interval) (intvl2 : interval) : interval =
       let ordered x y = if Endpoint.compare x y <= 0 then x, y else y, x in
         match intvl1, intvl2 with
@@ -126,7 +116,7 @@ module MakeInterval (Endpoint : ORDERED_TYPE) =
         | Interval (low1, high1), Interval (low2, high2) ->
           let (_, low), (high, _)  = ordered low1 low2, ordered high1 high2 in
           create low high
-    end ;;
+  end ;;
 
 (*......................................................................
 Exercise 1B: Using the completed functor above, instantiate an integer
@@ -182,7 +172,7 @@ module type INTERVAL =
     type interval
     type endpoint
     val create : endpoint -> endpoint -> interval
-    val is_empty : interval ->  bool
+    val is_empty : interval -> bool
     val contains : interval -> endpoint -> bool
     val intersect : interval -> interval -> interval
   end ;;
@@ -194,8 +184,7 @@ INTERVAL signature. (Much of the implementation can be copied from
 MakeInterval above.) **Don't forget to specify the module type.**
 ......................................................................*)
 
-module MakeSafeInterval (Endpoint : ORDERED_TYPE)
-                      : INTERVAL =
+module MakeSafeInterval (Endpoint : ORDERED_TYPE) : INTERVAL =
   struct
     type endpoint = Endpoint.t
     type interval =
