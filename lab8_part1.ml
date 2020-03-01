@@ -196,7 +196,7 @@ module MakeSafeInterval (Endpoint : ORDERED_TYPE)
       | Interval of endpoint * endpoint
       | Empty
 
-    let create (low : endpoint) (high : endpoint) : interval =
+    let create (low : Endpoint.t) (high : Endpoint.t) : interval =
       if Endpoint.compare low high > 0 then Empty
       else Interval (low, high)
 
@@ -205,7 +205,7 @@ module MakeSafeInterval (Endpoint : ORDERED_TYPE)
       | Empty -> true
       | Interval _ -> false
 
-    let contains (intvl : interval) (x : endpoint) : bool =
+    let contains (intvl : interval) (x : Endpoint.t) : bool =
       match intvl with
       | Empty -> false
       | Interval (low, high) ->
