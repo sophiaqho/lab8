@@ -177,7 +177,7 @@ module type INTERVAL =
     type endpoint
     val create : endpoint -> endpoint -> interval
     val is_empty : interval ->  bool
-    val contains : interval -> bool
+    val contains : interval -> endpoint -> bool
     val intersect : interval -> interval -> interval
   end ;;
 
